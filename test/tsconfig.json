@@ -1,0 +1,24 @@
+{
+   "compilerOptions": {
+      "alwaysStrict": true,
+      "baseUrl": ".",
+      "lib": ["ES6", "DOM"],
+      "module": "ES6",
+      "moduleResolution": "node",
+      "noFallthroughCasesInSwitch": true,
+      "noImplicitAny": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "outDir": "tempBuild",
+      "paths": {
+         "dialog-manager": ["../dist/DialogMgr.d.ts"]
+      },
+      "removeComments": true,
+      "strictFunctionTypes": true,
+      "strictNullChecks": true,
+      "target": "ES5"
+   },
+   "files": ["app.ts"]
+}

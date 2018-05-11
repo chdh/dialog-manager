@@ -1,0 +1,28 @@
+{
+   "name": "dialog-manager",
+   "version": "1.0.0",
+   "description": "A simple dialog manager for modal popup dialogs and toast messages",
+   "types": "dist/DialogMgr.d.ts",
+   "module": "dist/DialogMgr.js",
+   "keywords": [
+      "modal",
+      "dialog",
+      "popup",
+      "toast"
+   ],
+   "license": "MIT",
+   "homepage": "http://www.source-code.biz/snippets/typescript/dialogManager",
+   "repository": "github:chdh/dialog-manager",
+   "contributors": [
+      {
+         "name": "Christian d'Heureuse",
+         "email": "chdh@inventec.ch"
+      }
+   ],
+   "scripts": {
+      "build": "tsc"
+   },
+   "files": [
+      "dist/*"
+   ]
+}
