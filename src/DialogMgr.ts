@@ -23,7 +23,7 @@ var toastBoxElement:         HTMLElement;
 // Can be thrown within a FormInputProcessor to stop further processing.
 export class FormInputProcessorException extends Error {
    // (This class is currently only used internally, but in the future it could be part of the public API.)
-   public isFormInputProcessorException = true }           // for detecting class with IE5
+   public isFormInputProcessorException = true; }          // for detecting class with IE5
 
 interface DialogParms {
    dialogType:               DialogType;
@@ -43,7 +43,6 @@ function init() {
       return; }
    //
    const styleElement = document.createElement("style");
-   styleElement.type = "text/css";
    styleElement.textContent = cssTemplate;
    document.head.insertAdjacentElement("afterbegin", styleElement);
    document.body.insertAdjacentHTML("beforeend", htmlTemplate);
@@ -83,7 +82,7 @@ function setWaitCursor (enabled: boolean) {
    setClass(rootElement, "dialogMgr_waitCursor", enabled); }
 
 function getAutoFocusElement() : HTMLElement {
-   let dp = activeDialogParms;
+   const dp = activeDialogParms;
    return (
       !dp ? frameElement :
       dp.focusElement ? dp.focusElement :
@@ -185,7 +184,7 @@ function startDelayedDisplayTimer (dialogType: DialogType, delayTime: number, ca
    delayedDisplayTimerId = setTimeout(timeout, delayTime);
    function timeout() {
       delayedDisplayTimerId = undefined;
-      callback(); }};
+      callback(); }}
 
 function cancelDelayedDisplayTimer() {
    if (delayedDisplayTimerId) {
@@ -306,11 +305,11 @@ export function promptConfirmation (mp: MsgParms) : Promise<boolean> {
          onClose:             resolve };
       openModalDialog(dp); }}
 
-export interface promptInputParms {
+export interface PromptInputParms {
    promptText:     string;
    titleText?:     string; }
 
-export function promptInput (pp: promptInputParms) : Promise<string|undefined> {
+export function promptInput (pp: PromptInputParms) : Promise<string|undefined> {
    return new Promise(executor);
    function executor (resolve: (result: string) => void, _reject: Function) {
       const template = `
@@ -369,13 +368,13 @@ function toastAnimationEndEventHandler() {
    if (toastDisplayState == ToastDisplayState.fadeOut) {
       setToastDisplayState(ToastDisplayState.none); }}
 
-export interface toastParms {
+export interface ToastParms {
    msgText:        string;
    duration?:      number; }           // duration in ms, default is defaultToastDuration
 
 const defaultToastDuration = 1500;
 
-export function showToast (tp: toastParms) {
+export function showToast (tp: ToastParms) {
    init();
    if (toastTimerId) {
       clearTimeout(toastTimerId);
@@ -530,4 +529,4 @@ function nextTick (callback: () => void) {
    if (!dummyResolvedPromise) {
       // The Promise must only be created after a possibly existing polyfill is loaded.
       dummyResolvedPromise = Promise.resolve(); }
-   dummyResolvedPromise.then(callback); }
+   void dummyResolvedPromise.then(callback); }

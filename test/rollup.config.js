@@ -4,7 +4,7 @@ import alias from "rollup-plugin-alias";
 import cleanup from 'rollup-plugin-cleanup';
 
 export default {
-   input: "tempBuild/app.js",
+   input: "tempBuild/App.js",
    output: {
       file: "appBundle.js",
       format: "iife"

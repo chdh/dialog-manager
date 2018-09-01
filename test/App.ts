@@ -19,10 +19,10 @@ function reportValidityPolyfill (this: HTMLFormElement) : boolean {
    this.removeChild(button);
    return isValid;
    function createInvisibleSubmitButton() {
-      const button = <HTMLButtonElement>document.createElement("button");
-      button.type = "submit";
-      button.style.display = "none";
-      return button; }
+      const button2 = <HTMLButtonElement>document.createElement("button");
+      button2.type = "submit";
+      button2.style.display = "none";
+      return button2; }
    function submitEventHandler (event: Event) {
       event.preventDefault();
       isValid = true; }}
@@ -57,29 +57,29 @@ function init2() {
       await DialogMgr.showMsg({msgText: "Message text...", titleText: "Title text"});
       log("Dialog closed."); });
    document.getElementById("testShow2")!.addEventListener("click", () => {
-      DialogMgr.showMsg({msgText: "Line one\nLine two\nLine three..."}); });
+      void DialogMgr.showMsg({msgText: "Line one\nLine two\nLine three..."}); });
    document.getElementById("testShow3")!.addEventListener("click", () => {
-      DialogMgr.showMsg({msgText: "Blah blah blah blah. ".repeat(99)}); });
+      void DialogMgr.showMsg({msgText: "Blah blah blah blah. ".repeat(99)}); });
    document.getElementById("testShow4")!.addEventListener("click", () => {
-      DialogMgr.showMsg({msgText: "Blah blah blah blah. ".repeat(999)}); });
+      void DialogMgr.showMsg({msgText: "Blah blah blah blah. ".repeat(999)}); });
    document.getElementById("testShow5")!.addEventListener("click", () => {
-      DialogMgr.showMsg({msgText: "Blah blah blah blah. ".repeat(999), titleText: "Title text"}); });
+      void DialogMgr.showMsg({msgText: "Blah blah blah blah. ".repeat(999), titleText: "Title text"}); });
    document.getElementById("testShow6")!.addEventListener("click", () => {
-      DialogMgr.showMsg({msgHtml: "<b>bold</b> <i>italic</i>"}); });
+      void DialogMgr.showMsg({msgHtml: "<b>bold</b> <i>italic</i>"}); });
    document.getElementById("testShow7")!.addEventListener("click", () => {
       const div = document.createElement("div");
       div.innerHTML = "Text of <b>div</b> element.";
-      DialogMgr.showMsg({msgNode: div}); });
+      void DialogMgr.showMsg({msgNode: div}); });
    document.getElementById("testShow8")!.addEventListener("click", () => {
       const fragment = document.createRange().createContextualFragment("Text of <b>fragment</b>.");
-      DialogMgr.showMsg({msgNode: fragment}); });
+      void DialogMgr.showMsg({msgNode: fragment}); });
    //
    document.getElementById("testConfirmationDialog1")!.addEventListener("click", async () => {
-      let result = await DialogMgr.promptConfirmation({msgText: "Question text?", titleText: "Title text"});
+      const result = await DialogMgr.promptConfirmation({msgText: "Question text?", titleText: "Title text"});
       log("Dialog result: " + result); });
    //
    document.getElementById("testPromptInput1")!.addEventListener("click", async () => {
-      let result = await DialogMgr.promptInput({promptText: "Enter product ID:", titleText: "Input Prompt Test"});
+      const result = await DialogMgr.promptInput({promptText: "Enter product ID:", titleText: "Input Prompt Test"});
       log("Input result: \"" + result + "\""); });
    //
    document.getElementById("testFatalError")!.addEventListener("click", () => {

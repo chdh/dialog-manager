@@ -20,5 +20,5 @@
       "strictNullChecks": true,
       "target": "ES5"
    },
-   "files": ["app.ts"]
+   "files": ["App.ts"]
 }
