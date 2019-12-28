@@ -1,6 +1,6 @@
 {
    "name": "dialog-manager",
-   "version": "1.0.1",
+   "version": "1.0.2",
    "description": "A simple dialog manager for modal popup dialogs and toast messages",
    "types": "dist/DialogMgr.d.ts",
    "module": "dist/DialogMgr.js",
@@ -16,7 +16,8 @@
    "contributors": [
       {
          "name": "Christian d'Heureuse",
-         "email": "chdh@inventec.ch"
+         "email": "chdh@inventec.ch",
+         "url": "http://www.source-code.biz"
       }
    ],
    "scripts": {

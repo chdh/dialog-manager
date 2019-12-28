@@ -81,6 +81,12 @@ function init2() {
    document.getElementById("testPromptInput1")!.addEventListener("click", async () => {
       const result = await DialogMgr.promptInput({promptText: "Enter product ID:", titleText: "Input Prompt Test"});
       log("Input result: \"" + result + "\""); });
+   document.getElementById("testPromptInput2")!.addEventListener("click", async () => {
+      const result = await DialogMgr.promptInput({promptText: "Enter product ID:", defaultValue: "The default value"});
+      log("Input result: \"" + result + "\""); });
+   document.getElementById("testPromptInput3")!.addEventListener("click", async () => {
+      const result = await DialogMgr.promptInput({promptText: "Enter a large text:", rows: 5, defaultValue:  "Blah blah blah blah. ".repeat(99)});
+      log("Input result: \"" + result + "\""); });
    //
    document.getElementById("testFatalError")!.addEventListener("click", () => {
       DialogMgr.showFatalError({msgText: "Fatal error msg."}); });

@@ -307,22 +307,31 @@ export function promptConfirmation (mp: MsgParms) : Promise<boolean> {
 
 export interface PromptInputParms {
    promptText:     string;
-   titleText?:     string; }
+   titleText?:     string;
+   defaultValue?:  string;
+   rows?:          number; }                               // if undefined or <= 1, an INPUT element is used. Otherwise a TEXTAREA is used
 
 export function promptInput (pp: PromptInputParms) : Promise<string|undefined> {
    return new Promise(executor);
    function executor (resolve: (result: string) => void, _reject: Function) {
+      const multiline = pp.rows && pp.rows > 1;
+      const template1 = multiline ?
+         `<textarea required rows="${pp.rows}" style="width: 100%">` :
+         `<input type="text" required style="width: 100%">`;
       const template = `
          <form class="dialogMgr_contentPadding">
           <div class="dialogMgr_promptText"></div>
           <div style="margin-top: 10px;">
-           <input type="text" required style="width: 100%">
+           ${template1}
           </div>
          </form>`;
       const fragment = createFragment(template);
       fragment.querySelector(".dialogMgr_promptText")!.textContent = pp.promptText;
       const formElement = <HTMLFormElement>fragment.querySelector("form");
-      const inputElement = <HTMLInputElement>fragment.querySelector("input");
+      const inputElement = multiline ?
+         <HTMLTextAreaElement>fragment.querySelector("textarea") :
+         <HTMLInputElement>fragment.querySelector("input");
+      inputElement.value = pp.defaultValue ?? "";
       formElement.addEventListener("submit", formSubmitEventListener);
       inputElement.addEventListener("blur", trimInput);
       let reportValidityActive = false;                    // necessary for the reportValidity polyfill

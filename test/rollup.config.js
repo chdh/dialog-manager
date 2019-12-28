@@ -1,7 +1,7 @@
 import resolve from "rollup-plugin-node-resolve";
-import commonjs from 'rollup-plugin-commonjs';
-import alias from "rollup-plugin-alias";
-import cleanup from 'rollup-plugin-cleanup';
+import commonjs from "@rollup/plugin-commonjs";
+import alias from "@rollup/plugin-alias";
+import cleanup from "rollup-plugin-cleanup";
 
 export default {
    input: "tempBuild/App.js",
@@ -15,7 +15,9 @@ export default {
          namedExports: { "node_modules/es6-promise/dist/es6-promise.js": ["polyfill"] }
       }),
       alias({
-         "dialog-manager": "../dist/DialogMgr.js"
+         entries: {
+            "dialog-manager": "../dist/DialogMgr.js"
+         }
       }),
       cleanup()
    ]
