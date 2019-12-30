@@ -1,6 +1,6 @@
 {
    "name": "dialog-manager",
-   "version": "1.0.2",
+   "version": "1.0.3",
    "description": "A simple dialog manager for modal popup dialogs and toast messages",
    "types": "dist/DialogMgr.d.ts",
    "module": "dist/DialogMgr.js",

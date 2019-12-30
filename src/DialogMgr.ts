@@ -7,6 +7,7 @@ var activeDialogType:        DialogType  | undefined;      // undefined = no dia
 var activeDialogParms:       DialogParms | undefined;
 var dialogResult:            any;
 var displayState:            DisplayState;
+var oldActiveElement:        Element | null = null;
 var animationSupported:      boolean;
 var initDone:                boolean = false;
 
@@ -90,12 +91,21 @@ function getAutoFocusElement() : HTMLElement {
       dp.okButton ? okButton :
       frameElement); }
 
+function restoreOldFocus() {
+   if (!oldActiveElement) {
+      return; }
+   try {
+      (<HTMLElement>oldActiveElement).focus(); }
+    catch (e) {
+      console.log("Unable to restore old focus. " + e); }}
+
 function closeDialog (fade: boolean = false) {
    if (!initDone || activeDialogType == undefined) {
       return; }
    activeDialogType = undefined;
    setDisplayState(fade ? DisplayState.fadeOut : DisplayState.none);
    stopFocusJail();
+   restoreOldFocus();
    if (activeDialogParms && activeDialogParms.onClose) {
       activeDialogParms.onClose(dialogResult); }}
 
@@ -122,6 +132,7 @@ function openModalDialog (dp: DialogParms) {
    dialogResult = dp.defaultDialogResult;
    setDisplayState(DisplayState.fadeIn);
    setWaitCursor(dp.dialogType == DialogType.progressInfo);
+   oldActiveElement = document.activeElement;
    getAutoFocusElement().focus();
    startFocusJail(); }
 
