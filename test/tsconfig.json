@@ -1,8 +1,9 @@
 {
    "compilerOptions": {
+      "allowUnreachableCode": false,
       "alwaysStrict": true,
-      "baseUrl": ".",
-      "lib": ["ES6", "DOM"],
+      "forceConsistentCasingInFileNames": true,
+      "lib": ["ES2017", "DOM"],
       "module": "ES6",
       "moduleResolution": "node",
       "noFallthroughCasesInSwitch": true,
@@ -12,13 +13,10 @@
       "noUnusedLocals": true,
       "noUnusedParameters": true,
       "outDir": "tempBuild",
-      "paths": {
-         "dialog-manager": ["../dist/DialogMgr.d.ts"]
-      },
       "removeComments": true,
       "strictFunctionTypes": true,
       "strictNullChecks": true,
-      "target": "ES5"
+      "target": "ES2017"
    },
    "files": ["App.ts"]
 }

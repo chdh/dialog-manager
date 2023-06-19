@@ -3,6 +3,7 @@
       "allowUnreachableCode": false,
       "alwaysStrict": true,
       "declaration": true,
+      "forceConsistentCasingInFileNames": true,
       "lib": ["ES6", "DOM"],
       "module": "ES6",
       "moduleResolution": "node",
@@ -16,7 +17,7 @@
       "removeComments": true,
       "strictFunctionTypes": true,
       "strictNullChecks": true,
-      "target": "ES5"
+      "target": "ES6"
    },
    "include": [
       "src/**/*"

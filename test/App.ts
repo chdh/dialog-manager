@@ -1,47 +1,10 @@
 import * as DialogMgr from "dialog-manager";
-import * as PromisePolyfill from "es6-promise";
-
-//--- Polyfills ----------------------------------------------------------------
-
-function stringRepeatPolyfill (this: string, count: number) {
-    var s = '';
-    for (var i = 0; i < count; i++) {
-      s += this; }
-    return s; }
-
-function reportValidityPolyfill (this: HTMLFormElement) : boolean {
-   let isValid = false;
-   const button = createInvisibleSubmitButton();
-   this.appendChild(button);
-   this.addEventListener("submit", submitEventHandler);
-   button.click();
-   this.removeEventListener("submit", submitEventHandler);
-   this.removeChild(button);
-   return isValid;
-   function createInvisibleSubmitButton() {
-      const button2 = <HTMLButtonElement>document.createElement("button");
-      button2.type = "submit";
-      button2.style.display = "none";
-      return button2; }
-   function submitEventHandler (event: Event) {
-      event.preventDefault();
-      isValid = true; }}
-
-function installPolyfills() {
-   if (!String.prototype.repeat) {
-      String.prototype.repeat = stringRepeatPolyfill; }
-   if (!HTMLFormElement.prototype.reportValidity) {
-      HTMLFormElement.prototype.reportValidity = reportValidityPolyfill; }
-   if (!(<any>window).Promise) {
-      PromisePolyfill.polyfill(); }}
-
-//------------------------------------------------------------------------------
 
 function log (msg: string) {
    document.getElementById("log")!.textContent += msg + "\n"; }
 
 function init2() {
-   //
+   // Progress info
    document.getElementById("testProgressInfo1")!.addEventListener("click", () => {
       DialogMgr.showProgressInfo({msgText: "Progress Info Text...\nblah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah!"});
       setTimeout(() => DialogMgr.showProgressInfo({msgText: '1 second'}), 1000);
@@ -52,7 +15,7 @@ function init2() {
    document.getElementById("testProgressInfo3")!.addEventListener("click", () => {
       DialogMgr.showProgressInfo({msgText: "1s delayed...", titleText: "Test", delayTime: 2000});
       setTimeout(() => DialogMgr.closeProgressInfo(), 1000); });
-   //
+   // showMsg()
    document.getElementById("testShow1")!.addEventListener("click", async () => {
       await DialogMgr.showMsg({msgText: "Message text...", titleText: "Title text"});
       log("Dialog closed."); });
@@ -73,11 +36,11 @@ function init2() {
    document.getElementById("testShow8")!.addEventListener("click", () => {
       const fragment = document.createRange().createContextualFragment("Text of <b>fragment</b>.");
       void DialogMgr.showMsg({msgNode: fragment}); });
-   //
+   // promptConfirmation()
    document.getElementById("testConfirmationDialog1")!.addEventListener("click", async () => {
       const result = await DialogMgr.promptConfirmation({msgText: "Question text?", titleText: "Title text"});
       log("Dialog result: " + result); });
-   //
+   // promptInput()
    document.getElementById("testPromptInput1")!.addEventListener("click", async () => {
       const result = await DialogMgr.promptInput({promptText: "Enter product ID:", titleText: "Input Prompt Test"});
       log("Input result: \"" + result + "\""); });
@@ -87,20 +50,19 @@ function init2() {
    document.getElementById("testPromptInput3")!.addEventListener("click", async () => {
       const result = await DialogMgr.promptInput({promptText: "Enter a large text:", rows: 5, defaultValue:  "Blah blah blah blah. ".repeat(99)});
       log("Input result: \"" + result + "\""); });
-   //
+   // Fatal error
    document.getElementById("testFatalError")!.addEventListener("click", () => {
       DialogMgr.showFatalError({msgText: "Fatal error msg."}); });
    document.getElementById("testProgressFatal1")!.addEventListener("click", () => {
       DialogMgr.showProgressInfo({msgText: "Progress Info..."});
       setTimeout(() => DialogMgr.showFatalError({msgText: "Fatal ending after Progress Info."}), 2000); });
-   //
+   // Toast
    let toastCtr = 1;
    document.getElementById("testToast1")!.addEventListener("click", () => {
       DialogMgr.showToast({msgText: "This is toast message " + toastCtr++ + "."}); });
    }
 
 function init() {
-   installPolyfills();
    document.addEventListener("DOMContentLoaded", init2); }
 
 init();

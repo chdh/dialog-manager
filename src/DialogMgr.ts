@@ -32,8 +32,10 @@ interface DialogParms {
    wide?:                    boolean;
    titleText?:               string;
    closeEnabled?:            boolean;
-   okButton?:                boolean;
-   cancelButton?:            boolean;
+   okButton?:                boolean;                      // true to show the "OK" button
+   cancelButton?:            boolean;                      // true to show the "Cancel" button
+   okButtonText?:            string;
+   cancelButtonText?:        string;
    focusElement?:            HTMLElement;
    defaultDialogResult?:     any;
    formInputProcessor?:      () => any;                    // returns the dialogResult and can throw a FormInputProcessorException
@@ -73,14 +75,14 @@ function setDisplayState (newDisplayState: DisplayState) {
    if (!initDone || displayState == newDisplayState) {
       return; }
    displayState = newDisplayState;
-   setClass(rootElement, "dialogMgr_fadeIn", displayState == DisplayState.fadeIn);
+   rootElement.classList.toggle("dialogMgr_fadeIn", displayState == DisplayState.fadeIn);
       // The fadeIn style is added even if animation is not supported.
-   setClass(rootElement, "dialogMgr_fadeOut", displayState == DisplayState.fadeOut && animationSupported);
+   rootElement.classList.toggle("dialogMgr_fadeOut", displayState == DisplayState.fadeOut && animationSupported);
       // The fadeOut style is only added when animation is supported.
-   setClass(rootElement, "dialogMgr_transparentOverlay", displayState == DisplayState.transparentOverlay); }
+   rootElement.classList.toggle("dialogMgr_transparentOverlay", displayState == DisplayState.transparentOverlay); }
 
 function setWaitCursor (enabled: boolean) {
-   setClass(rootElement, "dialogMgr_waitCursor", enabled); }
+   rootElement.classList.toggle("dialogMgr_waitCursor", enabled); }
 
 function getAutoFocusElement() : HTMLElement {
    const dp = activeDialogParms;
@@ -106,21 +108,23 @@ function closeDialog (fade: boolean = false) {
    setDisplayState(fade ? DisplayState.fadeOut : DisplayState.none);
    stopFocusJail();
    restoreOldFocus();
-   if (activeDialogParms && activeDialogParms.onClose) {
+   if (activeDialogParms?.onClose) {
       activeDialogParms.onClose(dialogResult); }}
 
 function updateDialog (dp: DialogParms) {
-   headerElement.style.display = (dp.titleText) ? "" : "none";
-   headerElement.textContent = dp.titleText || "";
+   headerElement.style.display = dp.titleText ? "" : "none";
+   headerElement.textContent = dp.titleText ?? "";
    contentElement.innerHTML = "";                          // removes all child elements
    contentElement.appendChild(dp.content);
    nextTick(() => {                                        // element must be visible for scrollTop/Left to work (and in Firefox even rendered by the browser)
       contentElement.scrollTop = 0;
       contentElement.scrollLeft = 0; });
-   setClass(frameElement, "dialogMgr_wide", !!dp.wide);
+   frameElement.classList.toggle("dialogMgr_wide", !!dp.wide);
    footerElement.style.display = (dp.okButton || dp.cancelButton) ? "" : "none";
    okButton.style.display = dp.okButton ? "" : "none";
-   cancelButton.style.display = dp.cancelButton ? "" : "none"; }
+   cancelButton.style.display = dp.cancelButton ? "" : "none";
+   okButton.textContent = dp.okButtonText ?? "OK";
+   cancelButton.textContent = dp.cancelButtonText ?? "Cancel"; }
 
 function openModalDialog (dp: DialogParms) {
    init();
@@ -147,7 +151,7 @@ function rootElementClickEventHandler (event: Event) {
       closeDialog(); }}
 
 function okButtonClickEventHandler() {
-   if (activeDialogParms && activeDialogParms.formInputProcessor) {
+   if (activeDialogParms?.formInputProcessor) {
       try {
          dialogResult = activeDialogParms.formInputProcessor(); }
        catch (e) {
@@ -221,17 +225,21 @@ function genContentFrameElement (contentNode: Node) : HTMLElement {
    return e; }
 
 export interface MsgParms {
-   titleText?:     string;
-   msgText?:       string;             // preformatted text (with newline characters)
-   msgHtml?:       string;             // HTML text
-   msgNode?:       Node;               // DOM node / element / DocumentFragment
+   titleText?:               string;
+   msgText?:                 string;                       // preformatted text (with newline characters)
+   msgHtml?:                 string;                       // HTML text
+   msgNode?:                 Node;                         // DOM node / element / DocumentFragment
       // The three msg* fields are alternatives. Only one of them is used for the message text.
-   wide?:          boolean; }          // false=small, true=wide, undefined=automatic width
+   wide?:                    boolean;                      // false=small, true=wide, undefined=automatic width
+   okButtonText?:            string;                       // text for "OK" button, default is "OK"
+   cancelButtonText?:        string; }                     // text for "Cancel" button, default is "Cancel"
 
 function getDialogParmsFromMsgParms (mp: MsgParms) : DialogParms {
    return {
-      dialogType: DialogType.prompt,
-      titleText: mp.titleText,
+      dialogType:       DialogType.prompt,
+      titleText:        mp.titleText,
+      okButtonText:     mp.okButtonText,
+      cancelButtonText: mp.cancelButtonText,
       content:
          mp.msgText ? genContentTextElement(mp.msgText) :
          mp.msgHtml ? genContentFrameElement(createFragment(mp.msgHtml)) :
@@ -263,7 +271,7 @@ export interface ProgressInfoParms extends MsgParms {
 // The titleText parameter is preserved and applied to future calls until closeProgressInfo() is called.
 export function showProgressInfo (mp: ProgressInfoParms) {
    init();
-   progressInfoTitleText = mp.titleText || progressInfoTitleText;   // keep previous title if new one is undefined or empty
+   progressInfoTitleText = mp.titleText ?? progressInfoTitleText;   // keep previous title if new one is undefined
    if (mp.delayTime && mp.delayTime > 0 && activeDialogType == undefined) {
       setDisplayState(DisplayState.transparentOverlay);
       setWaitCursor(true);
@@ -317,10 +325,12 @@ export function promptConfirmation (mp: MsgParms) : Promise<boolean> {
       openModalDialog(dp); }}
 
 export interface PromptInputParms {
-   promptText:     string;
-   titleText?:     string;
-   defaultValue?:  string;
-   rows?:          number; }                               // if undefined or <= 1, an INPUT element is used. Otherwise a TEXTAREA is used
+   promptText:               string;
+   titleText?:               string;
+   defaultValue?:            string;
+   rows?:                    number;                       // if undefined or <= 1, an INPUT element is used. Otherwise a TEXTAREA is used
+   okButtonText?:            string;                       // text for "OK" button, default is "OK"
+   cancelButtonText?:        string; }                     // text for "Cancel" button, default is "Cancel"
 
 export function promptInput (pp: PromptInputParms) : Promise<string|undefined> {
    return new Promise(executor);
@@ -368,6 +378,8 @@ export function promptInput (pp: PromptInputParms) : Promise<string|undefined> {
          closeEnabled:        true,
          okButton:            true,
          cancelButton:        true,
+         okButtonText:        pp.okButtonText,
+         cancelButtonText:    pp.cancelButtonText,
          focusElement:        inputElement,
          formInputProcessor:  formInputProcessor,
          onClose:             resolve };
@@ -380,8 +392,8 @@ var toastDisplayState :      ToastDisplayState;
 var toastTimerId:            number | undefined;
 
 function setToastDisplayState (newDisplayState: ToastDisplayState) {
-   setClass(toastRootElement, "dialogMgr_fadeIn", newDisplayState == ToastDisplayState.fadeIn);
-   setClass(toastRootElement, "dialogMgr_fadeOut", newDisplayState == ToastDisplayState.fadeOut && animationSupported);
+   toastRootElement.classList.toggle("dialogMgr_fadeIn", newDisplayState == ToastDisplayState.fadeIn);
+   toastRootElement.classList.toggle("dialogMgr_fadeOut", newDisplayState == ToastDisplayState.fadeOut && animationSupported);
    toastDisplayState = newDisplayState; }
 
 function toastAnimationEndEventHandler() {
@@ -401,7 +413,7 @@ export function showToast (tp: ToastParms) {
       toastTimerId = undefined; }
    toastBoxElement.textContent = tp.msgText;
    setToastDisplayState(ToastDisplayState.fadeIn);
-   const duration = tp.duration || defaultToastDuration;
+   const duration = tp.duration ?? defaultToastDuration;
    toastTimerId = setTimeout(timeout, duration);
    function timeout() {
       toastTimerId = undefined;
@@ -429,6 +441,7 @@ const cssTemplate = `
     overflow: hidden;
     font-size: 1rem;
     background-color: rgba(64, 64, 64, 0.5);
+    color: #000;
     box-sizing: border-box;
     z-index: 990; }
  .dialogMgr_root.dialogMgr_fadeIn {
@@ -535,18 +548,10 @@ const htmlTemplate = `
 
 //--- General helper routines --------------------------------------------------
 
-// This function is necessary because IE11 does not fully implement ClassList.toggle().
-function setClass (element: Element, cssClassName: string, enabled: boolean) {
-   const cl = element.classList;
-   if (enabled) {
-      cl.add(cssClassName); }
-    else {
-      cl.remove(cssClassName); }}
-
 let dummyResolvedPromise: Promise<void>;
 
 function nextTick (callback: () => void) {
-   if (!dummyResolvedPromise) {
+   if (!<any>dummyResolvedPromise) {
       // The Promise must only be created after a possibly existing polyfill is loaded.
       dummyResolvedPromise = Promise.resolve(); }
    void dummyResolvedPromise.then(callback); }
