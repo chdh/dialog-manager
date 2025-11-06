@@ -1,9 +1,9 @@
 const nodeResolve = require("@rollup/plugin-node-resolve");
 
 module.exports = {
-   input: "tempBuild/App.js",
+   input: "tempBuild/Main.js",
    output: {
-      file: "appBundle.js",
+      file: "app.js",
       format: "iife"
    },
    plugins: [

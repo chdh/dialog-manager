@@ -3,8 +3,8 @@
       "allowUnreachableCode": false,
       "alwaysStrict": true,
       "forceConsistentCasingInFileNames": true,
-      "lib": ["ES2017", "DOM"],
-      "module": "ES6",
+      "lib": ["ES2020", "DOM"],
+      "module": "ES2020",
       "moduleResolution": "node",
       "noFallthroughCasesInSwitch": true,
       "noImplicitAny": true,
@@ -16,7 +16,7 @@
       "removeComments": true,
       "strictFunctionTypes": true,
       "strictNullChecks": true,
-      "target": "ES2017"
+      "target": "ES2020"
    },
-   "files": ["App.ts"]
+   "include": ["src"]
 }

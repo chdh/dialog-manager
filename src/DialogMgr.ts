@@ -137,7 +137,10 @@ function openModalDialog (dp: DialogParms) {
    setDisplayState(DisplayState.fadeIn);
    setWaitCursor(dp.dialogType == DialogType.progressInfo);
    oldActiveElement = document.activeElement;
-   getAutoFocusElement().focus();
+   const focusElement = getAutoFocusElement();
+   focusElement.focus();
+   if (focusElement.tagName == "INPUT" || focusElement.tagName == "TEXTAREA") {
+      (<HTMLInputElement|HTMLTextAreaElement>focusElement).select(); }
    startFocusJail(); }
 
 //--- Event handling -----------------------------------------------------------
@@ -147,7 +150,7 @@ function animationEndEventHandler() {
       setDisplayState(DisplayState.none); }}
 
 function rootElementClickEventHandler (event: Event) {
-   if (event.target == rootElement && activeDialogType != undefined && activeDialogParms && activeDialogParms.closeEnabled) {
+   if (event.target == rootElement && activeDialogType != undefined && activeDialogParms?.closeEnabled) {
       closeDialog(); }}
 
 function okButtonClickEventHandler() {
@@ -168,7 +171,7 @@ function cancelButtonClickEventHandler() {
 
 function documentKeyDownEventHandler (event: KeyboardEvent) {
    if (activeDialogType != undefined) {
-      if ((event.key == "Escape" || event.key == "Esc") && activeDialogParms && activeDialogParms.closeEnabled) {
+      if ((event.key == "Escape" || event.key == "Esc") && activeDialogParms?.closeEnabled) {
          event.preventDefault();
          closeDialog(); }}
    if (displayState == DisplayState.transparentOverlay) {

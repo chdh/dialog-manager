@@ -48,7 +48,7 @@ function init2() {
       const result = await DialogMgr.promptInput({promptText: "Enter product ID:", defaultValue: "The default value"});
       log("Input result: \"" + result + "\""); });
    document.getElementById("testPromptInput3")!.addEventListener("click", async () => {
-      const result = await DialogMgr.promptInput({promptText: "Enter a large text:", rows: 5, defaultValue:  "Blah blah blah blah. ".repeat(99)});
+      const result = await DialogMgr.promptInput({promptText: "Enter a large text:", rows: 5, defaultValue: "Blah blah blah blah. ".repeat(99)});
       log("Input result: \"" + result + "\""); });
    // Fatal error
    document.getElementById("testFatalError")!.addEventListener("click", () => {
